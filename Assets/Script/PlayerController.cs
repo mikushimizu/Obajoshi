@@ -1,9 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour {
-	
+
+    [SerializeField] private bool keyboard_or_pad;
+    private enum InputType
+    {
+        Up,
+        Right,
+        Left,
+        Down,
+        Jump,
+    };
+
+    [SerializeField] private float threshould = 0.2f;
+
 	public AudioSource D1;
 	public AudioSource E1;
 	public AudioSource F1;
@@ -38,39 +51,69 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		if (GameManagerScript.end == false) {　//ゲーム中は
 			pos_y = transform.position.y;
-			if (Input.GetKey ("up")) { //前進
-				transform.position += transform.forward * 0.2f;
-				animator.SetBool ("is_running", true);
-			} else {
-				animator.SetBool ("is_running", false);
-			}
-			if (Input.GetKey ("right")) {　//右回り
-				transform.Rotate (0, 4, 0);
-				animator.SetBool ("is_right", true);
-			} else {
-				animator.SetBool ("is_right", false);
-			}
-			if (Input.GetKey ("left")) { //左回り
-				transform.Rotate (0, -4, 0);
-				animator.SetBool ("is_left", true);
-			} else {
-				animator.SetBool ("is_left", false);
-			}
-			if (Input.GetKeyDown ("down")) { //後ろを向く
-				transform.Rotate (0, 180, 0);
-			}
-			if (pos_y <= 1.7f) {
-				if (Input.GetKeyDown (KeyCode.Space)) { //ジャンプ
-					animator.SetBool ("is_jumping", true);
-					this.GetComponent<Rigidbody> ().AddForce (0, 300f, 0);
-				} else {
-					animator.SetBool ("is_jumping", false);
-				}
-			}
+            //animator.SetBool("is_running", false);
+            //animator.SetBool("is_right", false);
+            //animator.SetBool("is_left", false);
+            if (keyboard_or_pad)
+            {
+                if (Input.GetKey("up")){ Action(InputType.Up); }
+                if (Input.GetKey("right")) { Action(InputType.Right); }
+                if (Input.GetKey("left")) { Action(InputType.Left); }
+                if (Input.GetKeyDown("down")) { Action(InputType.Down); }
+                if (pos_y <= 1.7f) {
+                    if (Input.GetKeyDown(KeyCode.Space)) { Action(InputType.Jump); }
+                    else { /*animator.SetBool("is_jumping", false);*/ }
+                }
+            } else {
+                if(Input.GetAxis("Vertical") >= threshould) { Action(InputType.Up); }
+                if(Input.GetAxis("Horizontal") >= threshould) { Action(InputType.Right); }
+                if(Input.GetAxis("Horizontal") <= -threshould) { Action(InputType.Left); }
+                if(Input.GetAxis("Vertical") <= -threshould) { Action(InputType.Down); }
+                if(pos_y <= 1.7f) {
+                    if (Input.GetKey(KeyCode.JoystickButton1)) { Action(InputType.Jump); }
+                    else { /*animator.SetBool("is_jumping", false);*/ }
+                }
+            }
+            
+			
 		} else {
 			animator.SetBool ("is_finish", true);
 		}
 	}
+
+    void Action(InputType inputType)
+    {
+        switch (inputType)
+        {
+            case InputType.Up:  //前進
+                transform.position += transform.forward * 0.2f;
+                //animator.SetBool("is_running", true);
+                Debug.Log("UP");
+                break;
+            case InputType.Right:  //右回り
+                transform.Rotate(0, 4, 0);
+                //animator.SetBool("is_right", true);
+                Debug.Log("RIGHT");
+                break;
+            case InputType.Left:  //左回り
+                transform.Rotate(0, -4, 0);
+                //animator.SetBool("is_left", true);
+                Debug.Log("LEFT");
+                break;
+            case InputType.Down:  //後ろを向く
+                transform.Rotate(0, 180, 0);
+                Debug.Log("DOWN");
+                break;
+            case InputType.Jump:  //ジャンプ
+                //animator.SetBool("is_jumping", true);
+                //this.GetComponent<Rigidbody>().AddForce(0, 300f, 0);
+                Debug.Log("JUMP");
+                break;
+            default:
+                Debug.Log("Error! inputType has null. return.");
+                break;
+        }
+    }
 
 	void OnCollisionEnter(Collision collision){
 		//ハートに触れたとき
