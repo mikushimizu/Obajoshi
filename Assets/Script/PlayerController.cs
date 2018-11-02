@@ -135,45 +135,7 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log("player hit to kinoko.");
 			ScoreScript.playerHP--;
 		}
-
-		//キノコの頭を踏んだ時
-		if (collision.gameObject.tag == "Touch") {
-			enemyCount++;
-			Debug.Log("enemyCount:" + enemyCount);
-            
-			if (enemyCount == 1) {
-				D1.Play ();
-			}else if (enemyCount == 2) {
-				E1.Play ();
-			}else if (enemyCount == 3) {
-				F1.Play ();
-			}else if (enemyCount == 4) {
-				G1.Play ();
-			}else if (enemyCount == 5) {
-				A1.Play ();
-			}else if (enemyCount == 6) {
-				B1.Play ();
-			}else if (enemyCount == 7) {
-				C1.Play ();
-			}else if (enemyCount == 8) {
-				D2.Play ();
-			}else if (enemyCount == 9) {
-				E2.Play ();
-			}else if (enemyCount == 10) {
-				F2.Play ();
-			}else if (enemyCount == 11) {
-				G2.Play ();
-			}else if (enemyCount == 12) {
-				A2.Play ();
-			}else if (enemyCount == 13) {
-				B2.Play ();
-			}else if (enemyCount == 14) {
-				C2.Play ();
-			}else if (enemyCount >= 15) {
-				D3s.Play ();
-			}
-			collision.gameObject.GetComponentInParent<EnemyScript> ().SendMessage ("Damage");
-		}
+        
 
 		if (collision.gameObject.tag == "Field") {
 			enemyCount = 0;
@@ -181,6 +143,77 @@ public class PlayerController : MonoBehaviour {
 		}
 
 	}
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Touch")
+        {
+            enemyCount++;
+            Debug.Log("enemyCount:" + enemyCount);
+
+            if (enemyCount == 1)
+            {
+                D1.Play();
+            }
+            else if (enemyCount == 2)
+            {
+                E1.Play();
+            }
+            else if (enemyCount == 3)
+            {
+                F1.Play();
+            }
+            else if (enemyCount == 4)
+            {
+                G1.Play();
+            }
+            else if (enemyCount == 5)
+            {
+                A1.Play();
+            }
+            else if (enemyCount == 6)
+            {
+                B1.Play();
+            }
+            else if (enemyCount == 7)
+            {
+                C1.Play();
+            }
+            else if (enemyCount == 8)
+            {
+                D2.Play();
+            }
+            else if (enemyCount == 9)
+            {
+                E2.Play();
+            }
+            else if (enemyCount == 10)
+            {
+                F2.Play();
+            }
+            else if (enemyCount == 11)
+            {
+                G2.Play();
+            }
+            else if (enemyCount == 12)
+            {
+                A2.Play();
+            }
+            else if (enemyCount == 13)
+            {
+                B2.Play();
+            }
+            else if (enemyCount == 14)
+            {
+                C2.Play();
+            }
+            else if (enemyCount >= 15)
+            {
+                D3s.Play();
+            }
+            collider.gameObject.GetComponentInParent<EnemyScript>().SendMessage("Damage");
+        }
+    }
 
 
 
