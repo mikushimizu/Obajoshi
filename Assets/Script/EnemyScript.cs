@@ -9,7 +9,7 @@ public class EnemyScript : MonoBehaviour {
 	NavMeshAgent agent;
 
 	void Start () {
-		GameObject player = GameObject.Find ("kamamiTest");
+		GameObject player = GameObject.Find ("player");
 		target = player.transform;
 		agent = GetComponent<NavMeshAgent> ();
 		

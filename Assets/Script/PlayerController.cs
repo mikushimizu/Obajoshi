@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 velocity;
 	[SerializeField]
 	private float jumpPower = 5f;
+    private float back_time = 0f;
 
 	void Start () {
 		animator = GetComponent<Animator> ();
@@ -51,9 +52,10 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		if (GameManagerScript.end == false) {　//ゲーム中は
 			pos_y = transform.position.y;
-            //animator.SetBool("is_running", false);
-            //animator.SetBool("is_right", false);
-            //animator.SetBool("is_left", false);
+            animator.SetBool("is_running", false);
+            animator.SetBool("is_right", false);
+            animator.SetBool("is_left", false);
+            animator.SetBool("is_jumping", false);
             if (keyboard_or_pad)
             {
                 if (Input.GetKey("up")){ Action(InputType.Up); }
@@ -62,16 +64,16 @@ public class PlayerController : MonoBehaviour {
                 if (Input.GetKeyDown("down")) { Action(InputType.Down); }
                 if (pos_y <= 1.7f) {
                     if (Input.GetKeyDown(KeyCode.Space)) { Action(InputType.Jump); }
-                    else { /*animator.SetBool("is_jumping", false);*/ }
+                    else { animator.SetBool("is_jumping", false); }
                 }
             } else {
                 if(Input.GetAxis("Vertical") >= threshould) { Action(InputType.Up); }
-                if(Input.GetAxis("Horizontal") >= threshould) { Action(InputType.Right); }
-                if(Input.GetAxis("Horizontal") <= -threshould) { Action(InputType.Left); }
+                if(Input.GetAxis("Horizontal2") >= threshould) { Action(InputType.Right); }
+                if(Input.GetAxis("Horizontal2") <= -threshould) { Action(InputType.Left); }
                 if(Input.GetAxis("Vertical") <= -threshould) { Action(InputType.Down); }
                 if(pos_y <= 1.7f) {
                     if (Input.GetKey(KeyCode.JoystickButton1)) { Action(InputType.Jump); }
-                    else { /*animator.SetBool("is_jumping", false);*/ }
+                    else { animator.SetBool("is_jumping", false); }
                 }
             }
             
@@ -79,6 +81,7 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			animator.SetBool ("is_finish", true);
 		}
+        back_time += Time.deltaTime;
 	}
 
     void Action(InputType inputType)
@@ -87,26 +90,28 @@ public class PlayerController : MonoBehaviour {
         {
             case InputType.Up:  //前進
                 transform.position += transform.forward * 0.2f;
-                //animator.SetBool("is_running", true);
+                animator.SetBool("is_running", true);
                 Debug.Log("UP");
                 break;
             case InputType.Right:  //右回り
                 transform.Rotate(0, 4, 0);
-                //animator.SetBool("is_right", true);
+                animator.SetBool("is_right", true);
                 Debug.Log("RIGHT");
                 break;
             case InputType.Left:  //左回り
                 transform.Rotate(0, -4, 0);
-                //animator.SetBool("is_left", true);
+                animator.SetBool("is_left", true);
                 Debug.Log("LEFT");
                 break;
             case InputType.Down:  //後ろを向く
+                if(back_time < 0.5) { return; }
                 transform.Rotate(0, 180, 0);
                 Debug.Log("DOWN");
+                back_time = 0f;
                 break;
             case InputType.Jump:  //ジャンプ
-                //animator.SetBool("is_jumping", true);
-                //this.GetComponent<Rigidbody>().AddForce(0, 300f, 0);
+                animator.SetBool("is_jumping", true);
+                this.GetComponent<Rigidbody>().AddForce(0, 100f, 0);
                 Debug.Log("JUMP");
                 break;
             default:
@@ -127,7 +132,7 @@ public class PlayerController : MonoBehaviour {
 		//キノコにぶつかったとき
 		if (collision.gameObject.tag == "Enemy") {
 			Damage.Play ();
-			Debug.Log("ita!");
+			Debug.Log("player hit to kinoko.");
 			ScoreScript.playerHP--;
 		}
 
@@ -135,7 +140,7 @@ public class PlayerController : MonoBehaviour {
 		if (collision.gameObject.tag == "Touch") {
 			enemyCount++;
 			Debug.Log("enemyCount:" + enemyCount);
-
+            
 			if (enemyCount == 1) {
 				D1.Play ();
 			}else if (enemyCount == 2) {
