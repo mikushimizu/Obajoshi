@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlayerControllerStart : MonoBehaviour {
 	private Animator animator;
-	public AudioSource start; 
+	//public AudioSource start; 
 	void Start () {
 		animator = GetComponent<Animator> ();
-		start.Play ();
+		//start.Play ();
 
 	}
 

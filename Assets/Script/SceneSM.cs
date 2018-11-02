@@ -9,7 +9,7 @@ public class SceneSM : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetKey (KeyCode.Return)) {
+		if (Input.GetKey (KeyCode.Return) || Input.GetButtonDown("Start")) {
 			SceneManager.LoadScene ("Main");
 		}
 	}

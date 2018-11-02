@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour {
                 break;
             case InputType.Jump:  //ジャンプ
                 animator.SetBool("is_jumping", true);
-                this.GetComponent<Rigidbody>().AddForce(0, 100f, 0);
+                this.GetComponent<Rigidbody>().AddForce(0, 1.5f, 0,ForceMode.Impulse);
                 Debug.Log("JUMP");
                 break;
             default:

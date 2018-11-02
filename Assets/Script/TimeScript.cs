@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class TimeScript : MonoBehaviour {
-	public static float countTime = 90;
+	public static float countTime = 45;
 	void Start () {
 		
 	}
